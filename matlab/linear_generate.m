@@ -1,3 +1,5 @@
+clear;
+
 t = 0:0.001:2;
 x = chirp(t, 0, 1, 200, 'linear');
 plot(x);

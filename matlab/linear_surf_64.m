@@ -1,4 +1,6 @@
-[A] = importdata([pwd '/../data/audio_out.txt']);
+clear;
+
+[A] = importdata([pwd '/../output/linear_64.txt']);
 
 srf = surf(A);
 

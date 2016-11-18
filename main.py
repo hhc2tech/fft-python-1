@@ -29,12 +29,33 @@ def get_window_width_from_input(values_count):
 
 
 def read_data(filename):
-    values = open(filename, 'r').read().split()
+    try:
+        f = open(filename, 'r')
+
+    except (IOError, OSError):
+        print 'Can\'t open file "{}"'.format(filename)
+        sys.exit(1)
+
+    values = f.read().split()
+
+    f.close()
 
     for i, value in enumerate(values):
         values[i] = float(value)
 
     return values
+
+
+def write_data(filename, data):
+    try:
+        f = open(filename, 'w')
+
+    except (IOError, OSError):
+        print 'Can\'t open file "{}"'.format(filename)
+        sys.exit(1)
+
+    f.write(data)
+    f.close()
 
 
 def get_windows(values, width):
@@ -81,12 +102,12 @@ def fft(values):
     return arr.ravel()
 
 
-def main():
-    # data = read_data('./data/audio.txt')
+def __main__():
+    data = read_data(raw_input('Enter input file path: '))
     # data = np.random.random(pow(2, 16))
-    data = []
-    for data_key in range(0, pow(2, 2)):
-        data.append(round(random.uniform(-1.0, 1.0), 8))
+    # data = []
+    # for data_key in range(0, pow(2, 2)):
+    #     data.append(round(random.uniform(-1.0, 1.0), 8))
 
     print 'Values count: {}'.format(len(data))
 
@@ -94,15 +115,25 @@ def main():
 
     windows = get_windows(data, window_width)
 
-    result = {}
+    output_data = ''
 
     for window_key, window in windows.iteritems():
-        result[window_key] = fft(window.values())
-        # result[window_key] = np.fft.fft(window.values())
+        # for value in np.fft.fft(window.values())
+        output_values = []
 
-    # print result
+        fft_values = fft(window.values())
+
+        half_of_fft_values = fft_values[:len(fft_values) / 2]
+
+        for value in half_of_fft_values:
+            output_values.append(str(np.abs(value)))
+
+        output_data += ', '.join(output_values)
+        output_data += '\n'
+
+    write_data(raw_input('Enter output file path: '), output_data)
 
     print 'FFT done!'
 
 if __name__ == '__main__':
-    main()
+    __main__()

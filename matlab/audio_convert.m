@@ -1,3 +1,5 @@
+clear;
+
 [y, Fs] = audioread([pwd '/../data/audio.mp3']);
 
 z = y(:, 1);

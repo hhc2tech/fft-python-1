@@ -1,4 +1,6 @@
-[A] = importdata([pwd '/../data/quadratic_out.txt']);
+clear;
+
+[A] = importdata([pwd '/../output/linear_256.txt']);
 
 srf = surf(A);
 
