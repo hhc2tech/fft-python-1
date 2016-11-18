@@ -82,7 +82,7 @@ def fft(values):
 
 
 def main():
-    # data = read_data('./data/CHIRP2.txt')
+    # data = read_data('./data/audio.txt')
     # data = np.random.random(pow(2, 16))
     data = []
     for data_key in range(0, pow(2, 2)):
