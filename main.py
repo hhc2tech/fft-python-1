@@ -6,7 +6,7 @@ import random
 import numpy as np
 
 
-def get_window_width_from_input():
+def get_window_width_from_input(values_count):
     window_width_power = int(raw_input('Enter the window width (power of 2, between 1 and 16): '))
 
     if window_width_power not in range(1, 16):
@@ -15,7 +15,17 @@ def get_window_width_from_input():
 
         sys.exit(1)
 
-    return pow(2, window_width_power)
+    window_width = pow(2, window_width_power)
+
+    print 'Window width: {}'.format(window_width)
+
+    if values_count < window_width:
+        print 'Window width must not be larger than values count!'
+        print 'Exiting.'
+
+        sys.exit(1)
+
+    return window_width
 
 
 def read_data(filename):
@@ -28,12 +38,6 @@ def read_data(filename):
 
 
 def get_windows(values, width):
-    if len(values) < width:
-        print 'Window width must not be larger than values count!'
-        print 'Exiting.'
-
-        sys.exit(1)
-
     count = 2 * (len(values) - width) / width + 1
 
     print 'Number of windows: {}'.format(count)
@@ -76,8 +80,6 @@ def fft(values):
 
     return arr.ravel()
 
-window_width = get_window_width_from_input()
-
 # data = read_data('./data/CHIRP2.txt')
 # data = np.random.random(pow(2, 16))
 data = []
@@ -85,17 +87,17 @@ for data_key in range(0, pow(2, 2)):
     data.append(round(random.uniform(-1.0, 1.0), 8))
 
 print 'Values count: {}'.format(len(data))
-print 'Window width: {}'.format(window_width)
+
+window_width = get_window_width_from_input(len(data))
 
 windows = get_windows(data, window_width)
 
 result = {}
-result_2 = {}
 
 for window_key, window in windows.iteritems():
     result[window_key] = fft(window.values())
     # result[window_key] = np.fft.fft(window.values())
 
-print result
+# print result
 
 print 'FFT done!'
