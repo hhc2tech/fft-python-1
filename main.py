@@ -80,24 +80,29 @@ def fft(values):
 
     return arr.ravel()
 
-# data = read_data('./data/CHIRP2.txt')
-# data = np.random.random(pow(2, 16))
-data = []
-for data_key in range(0, pow(2, 2)):
-    data.append(round(random.uniform(-1.0, 1.0), 8))
 
-print 'Values count: {}'.format(len(data))
+def main():
+    # data = read_data('./data/CHIRP2.txt')
+    # data = np.random.random(pow(2, 16))
+    data = []
+    for data_key in range(0, pow(2, 2)):
+        data.append(round(random.uniform(-1.0, 1.0), 8))
 
-window_width = get_window_width_from_input(len(data))
+    print 'Values count: {}'.format(len(data))
 
-windows = get_windows(data, window_width)
+    window_width = get_window_width_from_input(len(data))
 
-result = {}
+    windows = get_windows(data, window_width)
 
-for window_key, window in windows.iteritems():
-    result[window_key] = fft(window.values())
-    # result[window_key] = np.fft.fft(window.values())
+    result = {}
 
-# print result
+    for window_key, window in windows.iteritems():
+        result[window_key] = fft(window.values())
+        # result[window_key] = np.fft.fft(window.values())
 
-print 'FFT done!'
+    # print result
+
+    print 'FFT done!'
+
+if __name__ == '__main__':
+    main()
