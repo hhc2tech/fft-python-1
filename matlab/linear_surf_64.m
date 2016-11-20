@@ -1,6 +1,6 @@
 clear;
 
-[A] = importdata([pwd '/../output/linear_64.txt']);
+[A] = importdata([pwd '/../output/test256.txt']);
 
 srf = surf(A);
 

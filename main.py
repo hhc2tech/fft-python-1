@@ -4,6 +4,7 @@
 import sys
 import random
 import numpy as np
+from cmath import exp, pi
 
 
 def get_window_width_from_input(values_count):
@@ -75,36 +76,27 @@ def get_windows(values, width):
 
 
 def fft(values):
-    """A vectorized, non-recursive version of the Cooley-Tukey FFT"""
-    values = np.asarray(values, dtype=float)
-    values_count = values.shape[0]
+    values_count = len(values)
 
     if np.log2(values_count) % 1 > 0:
         raise ValueError('values count must be a power of 2, "{}" given.'.format(values_count))
 
-    # N_min here is equivalent to the stopping condition above,
-    # and should be a power of 2
-    n_min = min(values_count, 32)
+    t = exp(-2 * pi * 1j / values_count)
 
-    # Perform an O[N^2] DFT on all length-N_min sub-problems at once
-    n = np.arange(n_min)
-    k = n[:, None]
-    m = np.exp(-2j * np.pi * n * k / n_min)
-    arr = np.dot(m, values.reshape((n_min, -1)))
+    if values_count > 1:
+        values = fft(values[::2]) + fft(values[1::2])
 
-    # build-up each level of the recursive calculation all at once
-    while arr.shape[0] < values_count:
-        arr_even = arr[:, :arr.shape[1] / 2]
-        arr_odd = arr[:, arr.shape[1] / 2:]
-        factor = np.exp(-1j * np.pi * np.arange(arr.shape[0]) / arr.shape[0])[:, None]
-        arr = np.vstack([arr_even + factor * arr_odd, arr_even - factor * arr_odd])
+        for k in range(values_count // 2):
+            k_value = values[k]
+            values[k] = k_value + t ** k * values[k + values_count // 2]
+            values[k + values_count // 2] = k_value - t ** k * values[k + values_count // 2]
 
-    return arr.ravel()
+    return values
 
 
 def __main__():
     data = read_data(raw_input('Enter input file path: '))
-    # data = np.random.random(pow(2, 16))
+    # data = np.random.random(pow(2, 4))
     # data = []
     # for data_key in range(0, pow(2, 2)):
     #     data.append(round(random.uniform(-1.0, 1.0), 8))
